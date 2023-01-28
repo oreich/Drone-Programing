@@ -5,18 +5,21 @@ import KeyPressModule as kp
 import time
 
 # Parameters for pid controller
-PROPORTIONAL = 0.4
-INTEGRAL = 0.4
+PROPORTIONAL = 0.8
+INTEGRAL = 0.8
 DERIVATIVE = 0
 
 # Edges of the frame that indicate the distance
-CLOSE = 6200
-FAR = 6800
+CLOSE = 4000
+FAR = 20000
 
 # the size of the frame
 WIDTH = 360
 HIGH = 240
+list_of_area = []
 
+min_area = 0
+max_area = 0
 kp.init()
 
 me = tello.Tello()
@@ -97,6 +100,8 @@ def findFace(img):
         cy = y + h // 2
         # the area of the face
         area = w * h
+        list_of_area.append(area)
+
         # point that indicate the center of the face
         cv2.circle(img, (cx, cy), 5, (0, 255, 0), cv2.FILLED)
 
@@ -108,11 +113,11 @@ def findFace(img):
 
         i = myFaceListArea.index(max(myFaceListArea))
 
-        return img, [myFaceListC[i], myFaceListArea[i]]
+        return img, [myFaceListC[i], myFaceListArea[i]], list_of_area
 
     else:
 
-        return img, [[0, 0], 0]
+        return img, [[0, 0], 0], list_of_area
 
 
 def trackFace(info, w, pid, pError):
@@ -134,11 +139,11 @@ def trackFace(info, w, pid, pError):
 
     elif area > FRAME_RANGE[1]:  # if it to close go backword
 
-        fb = -20
+        fb = 100
 
     elif area < FRAME_RANGE[0] and area != 0:  # if it to far go farword
 
-        fb = 20
+        fb = -100
     # if we didnt ditact anything
     if x == 0:
         speed = 0
@@ -163,11 +168,11 @@ while True:
 
     img = cv2.resize(img, (WIDTH, HIGH))
 
-    img, info = findFace(img)
+    img, info, list_a = findFace(img)
 
     pError = trackFace(info, WIDTH, pid, pError)
 
-    print("Center", info[0], "Area", info[1])
+    print("Center", info[0], "Area", info[1], min(list_a), max(list_a))
 
     cv2.imshow("Output", img)
 
