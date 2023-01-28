@@ -2,12 +2,13 @@ import cv2
 import numpy as np
 
 # w, h = 0,0
-list_of_area = []
-
-min_area = 0
-max_area = 0
+list_of_area = [10000]
+list_a = []
+list_a.append(1000)
+# min_area = 0
+# max_area = 0
 def findFace(img):
-    global min_area, max_area
+    # global min_area, max_area
 
     faceCascade = cv2.CascadeClassifier("C:/Users/ozreich/GM7/Resources/haarcascade_frontalface_default.xml")
     imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -52,7 +53,9 @@ cap = cv2.VideoCapture(0)
 while True:
     _, img = cap.read()
     img, info, list_a = findFace(img)
-    print("Center", info[0], "Area", info[1], min(list_a) , max(list_a))
+    min_a = min(list_a)
+    max_a = max(list_a)
+    print("Center", info[0], "Area", info[1], min_a , max_a)
     # findFace(img)
 
     cv2.imshow("output", img)
