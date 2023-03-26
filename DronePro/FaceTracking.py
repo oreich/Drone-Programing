@@ -1,7 +1,14 @@
+"""
+now this file got all the functionalities that he had to have (find faces and track them) .
+the running of the find and track face occur in the main drone.
+TODO add key board control to the main
+TODO clean the code
+TODO add the commends to takeoff etc to new python file
+"""
 import cv2
 import numpy as np
-
 from djitellopy import tello
+# import findFace
 # import KeyPressModule as kp
 import time
 
@@ -40,7 +47,8 @@ FRAME_RANGE = [FAR, CLOSE]  # the edges that indicates to us the distance
 
 pid = [PROPORTIONAL, INTEGRAL, DERIVATIVE]  # i can fine-tune this parameters
 
-pError = 0  # previous error
+# pError = 0  # previous error
+
 
 #
 # def getKeyboardInput():
@@ -85,7 +93,7 @@ pError = 0  # previous error
 #
 
 def findFace(img):
-    faceCascade = cv2.CascadeClassifier("C:/Users/ozreich/GM7/Resources/haarcascade_frontalface_default.xml")
+    faceCascade = cv2.CascadeClassifier("C:/Users/ozreich/GM7/DronePro/haarcascade_frontalface_default.xml")
     imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # convertung to grey scale
     faces = faceCascade.detectMultiScale(imgGray, 1.2, 8)
     myFaceListC = []  # list of faces if there are more then one face we will relate to the biggest face
@@ -132,20 +140,18 @@ def trackFace(info, w, pid, pError):
     # me.send_rc_control(0, fb, 0, speed)  # send the command to the drone
     return error
 
-
-cap = cv2.VideoCapture(1)
-
-
-
-while True:
     # print(me.get_battery())
-    _, img = cap.read()
-    # img = me.get_frame_read().frame
-    # img = cv2.resize(img, (WIDTH, HIGH))
-    img, info, list_a = findFace(img)
-    pError = trackFace(info, WIDTH, pid, pError)
-    print("Center", info[0], "Area", info[1], min(list_a), max(list_a))
-    cv2.imshow("Output", img)
-    # vals = getKeyboardInput()
-    # me.send_rc_control(vals[0], vals[1], vals[2], vals[3])
-    cv2.waitKey(1)
+# cap = cv2.VideoCapture(1)
+
+#
+# while True:
+#     _, img = cap.read()
+#     # img = me.get_frame_read().frame
+#     # img = cv2.resize(img, (WIDTH, HIGH))
+#     img, info, list_a = findFace(img)
+#     pError = trackFace(info, WIDTH, pid, pError)
+#     # print("Center", info[0], "Area", info[1], min(list_a), max(list_a))
+#     cv2.imshow("Output", img)
+#     # vals = getKeyboardInput()
+#     # me.send_rc_control(vals[0], vals[1], vals[2], vals[3])
+#     cv2.waitKey(1)
