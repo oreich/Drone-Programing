@@ -1,3 +1,7 @@
+"""
+This class give the ability to control on the drone from the computer keyboard
+and also to take pictures.
+"""
 from djitellopy import tello
 
 import KeyPressModule as kp
